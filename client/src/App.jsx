@@ -12,8 +12,7 @@ function App() {
 	}, [notes]);
 
 	return (
-		<>
-			<div className='px-32 pt-16 max-md:px-7'>
+			<div className='px-32 pt-16 max-lg:px-16 max-sm:px-7 max-sm:pt-7'>
 				<h1 className='flex items-center gap-2 text-5xl font-semibold text-white'>
 					<img src='assets/notes.png' className='w-20' />
 					Notes
@@ -29,7 +28,6 @@ function App() {
 					</p>
 				)}
 			</div>
-		</>
 	);
 }
 
