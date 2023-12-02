@@ -15,7 +15,7 @@ const Note = ({item, notes, setNotes}) => {
     }
 
     const handleEdit = (id) => {
-        const index = id - 1;
+        const index = notes.findIndex(note => note.id == id);
         const notess = [...notes]
         notess[index].note = edit
         setNotes(notess)

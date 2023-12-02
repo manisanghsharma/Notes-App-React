@@ -1,8 +1,9 @@
 import { Edit3 } from "react-feather"
+import { nanoid } from "nanoid"
 
 const CreateBtn = ({notes, setNotes}) => {
   const handleCreate = () => {
-    const id = notes.length + 1
+    const id = nanoid();
     const note = ""
     const newItem = {id, note}
     const updatedNotes = [...notes, newItem]
