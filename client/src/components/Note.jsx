@@ -1,55 +1,62 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { Trash2, Edit, Check} from "react-feather"
-import CreateBtn from "./CreateBtn";
+import TextareaAutosize from 'react-textarea-autosize'
 
 const Note = ({item, notes, setNotes}) => {
-      const [isEditing, setIsEditing] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
     const [edit, setEdit] = useState(item.note)
+    const textRef = useRef();
 
-    useEffect(() => {
-        localStorage.setItem('notes', JSON.stringify(notes))
-    }, [notes])
-
-    const handleDelete = () => {
+    const handleDelete = (id) => {
         const updatedItems = notes.filter((note) => (
-            note.id!= item.id
+            note.id!= id
         ))
-
         setNotes(updatedItems)
     }
 
-    const handleEdit = () => {
-        const index = item.id - 1;
+    const handleEdit = (id) => {
+        const index = id - 1;
         const notess = [...notes]
         notess[index].note = edit
         setNotes(notess)
     }
 
   return (
-        
-        <>
-        
 		<div className='max-w-[600px] rounded-lg min-h-[120px] p-3 pb-12 max-h-fit bg-white relative my-6'>
-			<textarea 
-                className='text-lg outline-none w-full min-h-[80px] max-h-fit resize-none' 
-                spellCheck='false'
-                readOnly={!isEditing}
-                value={edit}
-                placeholder="Enter Text..."
-                onChange={(e) => setEdit(e.target.value)}
-            >
-			</textarea>
-			<div onClick={() => {
-                setIsEditing(!isEditing);
-                handleEdit()
-            }} className='p-2  rounded-full hover:bg-gray-300 transition-all absolute bottom-3 right-14 cursor-pointer resize-none'>
-				{isEditing ? <Check /> : <Edit />}
+			<TextareaAutosize
+				ref={textRef}
+				className='text-lg overflow-hidden outline-none w-full min-h-[80px] resize-none'
+				spellCheck='false'
+				readOnly={!isEditing}
+				value={edit}
+				placeholder='Enter Text...'
+				onFocus={(e) =>
+					e.currentTarget.setSelectionRange(
+						e.currentTarget.value.length,
+						e.currentTarget.value.length
+					)
+				}
+				onChange={(e) => setEdit(e.target.value)}
+			/>
+
+			<div
+				onClick={() => {
+					setIsEditing(!isEditing);
+					handleEdit(item.id);
+				}}
+				className='p-2  rounded-full hover:bg-gray-300 transition-all absolute bottom-3 right-14 cursor-pointer resize-none'
+			>
+				{isEditing ? (
+					<Check />
+				) : (
+					<Edit onClick={() => textRef.current.focus()} />
+				)}
 			</div>
+
 			<div className='p-2 rounded-full hover:bg-gray-300 transition-all absolute bottom-3 right-3 cursor-pointer resize-none'>
-				<Trash2 onClick={handleDelete} />
+				<Trash2 onClick={() => handleDelete(item.id)} />
 			</div>
 		</div>
-        </>
 	);
 }
 export default Note
